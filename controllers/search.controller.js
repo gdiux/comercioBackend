@@ -75,7 +75,8 @@ const search = async(req, res = response) => {
                         { description: regex }
                     ]
                 })
-                .populate('client', 'name phone cid'),
+                .populate('categoria')
+                .populate('subcategoria'),
                 Product.countDocuments()
             ]);
             break;

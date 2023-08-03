@@ -248,11 +248,11 @@ const updateProduct = async(req, res = response) => {
                 });
             }
 
-            campos.code = code;
+            campos.sku = sku;
         }
 
         // NAME
-        if (productDB.name !== name) {
+        if (name && productDB.name !== name) {
             const validateName = await Product.findOne({ name });
             if (validateName) {
                 return res.status(400).json({
@@ -266,9 +266,13 @@ const updateProduct = async(req, res = response) => {
         // UPDATE        
         const productUpdate = await Product.findByIdAndUpdate(pid, campos, { new: true, useFindAndModify: false });
 
+        const product = await Product.findById(pid)
+            .populate('categoria')
+            .populate('subcategoria');
+
         res.json({
             ok: true,
-            product: productUpdate
+            product
         });
 
 
