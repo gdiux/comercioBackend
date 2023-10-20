@@ -1,5 +1,5 @@
 /** =====================================================================
- *  CLIENTS ROUTER
+ *  INVOICE ROUTER 
 =========================================================================*/
 const { Router } = require('express');
 const { check } = require('express-validator');
@@ -8,54 +8,46 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
-// CONTROLLER
-const { getClients, createClient, updateClient, deleteClient } = require('../controllers/clients.controller');
+// CONTROLLERS
+const { getInvoice, getInvoiceId, createInvoice, updateInvoice } = require('../controllers/invoices.controller');
 
 const router = Router();
 
 /** =====================================================================
- *  GET CLIENTS
+ *  POST INVOICE
 =========================================================================*/
-router.get('/', validarJWT, getClients);
+router.post('/query', validarJWT, getInvoice);
 /** =====================================================================
- *  GET CLIENTS
+ *  POST INVOICE
 =========================================================================*/
 
 /** =====================================================================
- *  CREATE CLIENT
+ *  GET INVOICE ID
 =========================================================================*/
-router.post('/', [        
-        check('name', 'El nombre es olbigatorio').not().isEmpty(),
-        check('phone', 'El telefono es obligatorio').not().isEmpty(),
-        validarCampos
+router.get('/:id', validarJWT, getInvoiceId);
+/** =====================================================================
+ *  GET INVOICE ID
+=========================================================================*/
+
+/** =====================================================================
+ *  POST CREATE INVOICE
+=========================================================================*/
+router.post('/', [
+        validarJWT
     ],
-    createClient
+    createInvoice
 );
 /** =====================================================================
- *  CREATE CLIENT
+ *  POST CREATE INVOICE
 =========================================================================*/
 
 /** =====================================================================
- *  UPDATE CLIENT
+ *  PUT INVOICE
 =========================================================================*/
-router.put('/:id', [
-        validarJWT,
-        check('name', 'El nombre es olbigatorio').not().isEmpty(),
-        validarCampos
-    ],
-    updateClient
-);
+router.put('/:id', validarJWT, updateInvoice);
 /** =====================================================================
- *  UPDATE CLIENT
+ *  PUT INVOICE
 =========================================================================*/
 
-/** =====================================================================
- *  DELETE CLIENT
-=========================================================================*/
-router.delete('/:id', validarJWT, deleteClient);
-/** =====================================================================
- *  DELETE CLIENT
-=========================================================================*/
-
-// EXPORTS
+// EXPORT
 module.exports = router;

@@ -32,19 +32,20 @@ const updateImage = async(tipo, id, nameFile, desc) => {
     switch (tipo) {
         case 'products':
 
-            // SEARCH PRODUCT BY ID
             const product = await Product.findById(id);
             if (!product) {
                 return false;
             }
 
-            pathOld = `./uploads/products/${ product.img }`;
-            deleteImage(pathOld);
+            product.img.push({
+                img: nameFile,
+                fecha: new Date(Date.now())
+            })
 
-            // SAVE IMAGE
-            product.img = nameFile;
             await product.save();
             return true;
+
+            
 
             // BREAK PRODUCT
             break;

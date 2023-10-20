@@ -81,6 +81,19 @@ const ProductSchema = Schema({
         type: Number,
     },
 
+    offert: {
+        type: Boolean,
+        default: false
+    },
+
+    offertPrice: {
+        type: Number,
+    },
+
+    offertPercent: {
+        type: Number,
+    },
+
     taxes: {
         type: Boolean,
         default: false

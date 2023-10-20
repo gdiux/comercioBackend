@@ -1,4 +1,6 @@
 const { response } = require('express');
+const bcrypt = require('bcryptjs');
+const short = require('short-uuid');
 
 const Client = require('../models/clients.model');
 
@@ -45,7 +47,10 @@ const getClients = async(req, res = response) => {
 =========================================================================*/
 const createClient = async(req, res = response) => {
 
-    const cedula = req.body.cedula;
+    let { cedula, email, password } = req.body;
+
+    email = email.trim().toLowerCase();
+    cedula = cedula.trim().toLowerCase();
 
     try {
 
@@ -58,8 +63,31 @@ const createClient = async(req, res = response) => {
             });
         }
 
+        // VALIDATE CEDULA
+        const validarEmail = await Client.findOne({ email });
+        if (validarEmail) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Ya existe un usuario con este email'
+            });
+        }
+
         // SAVE CLIENT
         const client = new Client(req.body);
+
+        // ENCRYPTAR PASSWORD
+        if (!password) {
+            password = short.generate();
+        }
+
+        const salt = bcrypt.genSaltSync();
+        client.password = bcrypt.hashSync(password, salt);
+
+        client.referralCode = short.generate();
+        client.email = email;
+        client.cedula = cedula;
+        
+
         await client.save();
 
         res.json({

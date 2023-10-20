@@ -6,28 +6,65 @@ const ClientSchema = Schema({
         type: String,
         require: true
     },
-    cedula: {
+
+    lastname:{
         type: String,
     },
+
+    cedula: {
+        type: String,
+        unique: true
+    },
+
     phone: {
         type: String
     },
+
     email: {
+        type: String,
+        require: true,
+        unique: true
+    },
+
+    password: {
         type: String
     },
+
     address: {
         type: String
     },
+
     city: {
         type: String
     },
+
     department: {
         type: String
     },
+
+    party_type: {
+        type: String,
+        default: 'PERSONA_NATURAL'
+    },
+
+    referralCode: {
+        type: String
+    },
+
+    referredBy: {
+        type: String
+    },
+
+    walletBalance: {
+        type: Number,
+        default: 0
+    },
+
     status: {
         type: Boolean,
         default: true
     },
+
     fecha: {
         type: Date,
         default: Date.now

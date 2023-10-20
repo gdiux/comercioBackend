@@ -9,7 +9,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
 // CONTROLLER
-const { getProducts, oneProduct, createProduct, updateProduct, deleteProduct, createProductExcel } = require('../controllers/products.controller');
+const { getProducts, oneProduct, createProduct, updateProduct, deleteProduct, createProductExcel, getProductsClients, GetSkuProduct } = require('../controllers/products.controller');
 
 const router = Router();
 
@@ -17,6 +17,14 @@ const router = Router();
  *  ONE GET PRODUCT
 =========================================================================*/
 router.get('/:id', validarJWT, oneProduct);
+/** =====================================================================
+ *  ONE GET PRODUCT
+=========================================================================*/
+
+/** =====================================================================
+ *  ONE GET PRODUCT
+=========================================================================*/
+router.get('/codigo/:sku', validarJWT, GetSkuProduct);
 /** =====================================================================
  *  ONE GET PRODUCT
 =========================================================================*/
@@ -39,6 +47,14 @@ router.post('/', [
  *  GET PRODUCTS
 =========================================================================*/
 router.post('/query', validarJWT, getProducts);
+/** =====================================================================
+ *  GET PRODUCTS 
+=========================================================================*/
+
+/** =====================================================================
+ *  GET PRODUCTS
+=========================================================================*/
+router.post('/clients/query', validarJWT, getProductsClients);
 /** =====================================================================
  *  GET PRODUCTS 
 =========================================================================*/

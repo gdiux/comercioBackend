@@ -42,6 +42,44 @@ const getProducts = async(req, res = response) => {
 }
 
 /** =====================================================================
+ *  GET PRODUCTS EXCEL
+=========================================================================*/
+const getProductsClients = async(req, res = response) => {
+
+    try {
+
+        const { desde, hasta, sort, ...query } = req.body;
+
+        const [products, total] = await Promise.all([
+
+            Product.find(query)
+            .limit(hasta)
+            .skip(desde)
+            .sort(sort)
+            .populate('categoria')
+            .populate('tax')
+            .populate('subcategoria'),
+            Product.countDocuments({ status: true })
+        ])
+
+        res.json({
+            ok: true,
+            products,
+            total
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado, porfavor intente nuevamente'
+        });
+    }
+
+
+}
+
+/** =====================================================================
  *  GET PRODUTS FOR ID
 =========================================================================*/
 const oneProduct = async(req, res = response) => {
@@ -51,6 +89,38 @@ const oneProduct = async(req, res = response) => {
     try {
 
         const product = await Product.findById(id)
+            .populate('categoria')
+            .populate('tax')
+            .populate('subcategoria');
+
+        res.json({
+            ok: true,
+            product
+        });
+
+    } catch (error) {
+
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado, porfavor intente nuevamente'
+        });
+
+    }
+
+
+};
+
+/** =====================================================================
+ *  GET PRODUTS FOR SKU
+=========================================================================*/
+const GetSkuProduct = async(req, res = response) => {
+    
+    try {
+
+        const sku = req.params.sku;
+
+        const product = await Product.findOne({sku})
             .populate('categoria')
             .populate('tax')
             .populate('subcategoria');
@@ -345,5 +415,7 @@ module.exports = {
     createProduct,
     createProductExcel,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsClients,
+    GetSkuProduct
 };

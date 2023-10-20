@@ -21,6 +21,7 @@
         "mongoose-auto-increment": "^5.0.1",
         "pdfkit": "^0.13.0",
         "sharp": "^0.30.4",
+        "short-uuid": "^4.2.2",
         "uuid": "^8.3.2"
     }
 }
