@@ -24,7 +24,7 @@ const fileUpload = async(req, res = response) => {
     const id = req.params.id;
     const desc = req.query.desc || 'img';
 
-    const validType = ['products', 'logo', 'user'];
+    const validType = ['products', 'logo', 'user', 'category'];
 
     // VALID TYPES
     if (!validType.includes(tipo)) {
@@ -71,37 +71,37 @@ const fileUpload = async(req, res = response) => {
             .resize(300, 300)
             .webp({ equality: 75, effort: 6 })
             .toFile(path, (err, info) => {
-    
+
                 // UPDATE IMAGE
                 updateImage(tipo, id, nameFile, desc);
-    
+
                 res.json({
                     ok: true,
                     msg: 'Imagen Actualizada',
                     nombreArchivo: nameFile,
                     date: Date.now()
                 });
-    
+
             });
 
-    }else{
+    } else {
 
         // CONVERTIR A WEBP
         sharp(req.files.image.data)
             .resize(100, 100)
             .webp({ equality: 75, effort: 6 })
             .toFile(path, (err, info) => {
-    
+
                 // UPDATE IMAGE
                 updateImage(tipo, id, nameFile, desc);
-    
+
                 res.json({
                     ok: true,
                     msg: 'Imagen Actualizada',
                     nombreArchivo: nameFile,
                     date: Date.now()
                 });
-    
+
             });
     }
 

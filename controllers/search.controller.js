@@ -75,6 +75,8 @@ const search = async(req, res = response) => {
                         { description: regex }
                     ]
                 })
+                .skip(desde)
+                .limit(hasta)
                 .populate('categoria')
                 .populate('subcategoria'),
                 Product.countDocuments()

@@ -3,6 +3,7 @@ const fs = require('fs');
 // MODELS
 const Product = require('../models/products.model');
 const User = require('../models/users.model');
+const Category = require('../models/category.model');
 
 /** =====================================================================
  *  DELETE IMAGE
@@ -45,7 +46,7 @@ const updateImage = async(tipo, id, nameFile, desc) => {
             await product.save();
             return true;
 
-            
+
 
             // BREAK PRODUCT
             break;
@@ -65,6 +66,24 @@ const updateImage = async(tipo, id, nameFile, desc) => {
             // SAVE IMAGE
             user.img = nameFile;
             await user.save();
+            return true;
+
+            break;
+        case 'category':
+
+            // SEARCH USER BY ID
+            const category = await Category.findById(id);
+            if (!category) {
+                return false;
+            }
+
+            // VALIDATE IMAGE
+            pathOld = `./uploads/category/${ category.icon }`;
+            deleteImage(pathOld);
+
+            // SAVE IMAGE
+            user.icon = nameFile;
+            await category.save();
             return true;
 
             break;

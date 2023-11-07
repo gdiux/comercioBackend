@@ -7,7 +7,7 @@ const CategorySchema = Schema({
         require: true,
     },
 
-    icon: {
+    img: {
         type: String
     },
 
