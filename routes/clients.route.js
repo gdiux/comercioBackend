@@ -6,10 +6,10 @@ const { check } = require('express-validator');
 
 // MIDDLEWARES
 const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT } = require('../middlewares/validar-jwt');
+const { validarJWT, validarJWTClient } = require('../middlewares/validar-jwt');
 
 // CONTROLLER
-const { getClients, createClient, updateClient, deleteClient } = require('../controllers/clients.controller');
+const { getClients, createClient, updateClient, deleteClient, createClientWeb } = require('../controllers/clients.controller');
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router.get('/', validarJWT, getClients);
 /** =====================================================================
  *  CREATE CLIENT
 =========================================================================*/
-router.post('/', [        
+router.post('/', [
         check('name', 'El nombre es olbigatorio').not().isEmpty(),
         check('phone', 'El telefono es obligatorio').not().isEmpty(),
         validarCampos
@@ -33,6 +33,20 @@ router.post('/', [
 );
 /** =====================================================================
  *  CREATE CLIENT
+=========================================================================*/
+/** =====================================================================
+ *  CREATE CLIENT WEB
+=========================================================================*/
+router.post('/web', [
+        check('name', 'El nombre es olbigatorio').not().isEmpty(),
+        check('phone', 'El telefono es obligatorio').not().isEmpty(),
+        check('email', 'El correo es obligatorio').not().isEmpty(),
+        validarCampos
+    ],
+    createClientWeb
+);
+/** =====================================================================
+ *  CREATE CLIENT WEB
 =========================================================================*/
 
 /** =====================================================================
@@ -47,6 +61,20 @@ router.put('/:id', [
 );
 /** =====================================================================
  *  UPDATE CLIENT
+=========================================================================*/
+
+/** =====================================================================
+ *  UPDATE CLIENT
+=========================================================================*/
+router.put('/web/:id', [
+        validarJWTClient,
+        check('name', 'El nombre es olbigatorio').not().isEmpty(),
+        validarCampos
+    ],
+    updateClient
+);
+/** =====================================================================
+*  UPDATE CLIENT
 =========================================================================*/
 
 /** =====================================================================

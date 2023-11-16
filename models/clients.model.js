@@ -7,13 +7,12 @@ const ClientSchema = Schema({
         require: true
     },
 
-    lastname:{
+    lastname: {
         type: String,
     },
 
     cedula: {
-        type: String,
-        unique: true
+        type: String
     },
 
     phone: {

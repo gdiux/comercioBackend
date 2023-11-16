@@ -1,61 +1,53 @@
 /** =====================================================================
- *  LOGIN ROUTER
+ *  PEDIDO ROUTER 
 =========================================================================*/
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-// HELPERS
+// MIDDLEWARES
 const { validarCampos } = require('../middlewares/validar-campos');
-const { validarJWT, validarJWTClient } = require('../middlewares/validar-jwt');
+const { validarJWTClient } = require('../middlewares/validar-jwt');
 
 // CONTROLLERS
-const { login, renewJWT, loginClient, renewJWTClient } = require('../controllers/auth.controller');
+const { getPedido, getPedidoId, createPedido, updatePedido } = require('../controllers/pedidos.controller');
 
 const router = Router();
 
 /** =====================================================================
- *  LOGIN
+ *  POST PEDIDO
+=========================================================================*/
+router.post('/query', validarJWTClient, getPedido);
+/** =====================================================================
+ *  POST PEDIDO
+=========================================================================*/
+
+/** =====================================================================
+ *  GET PEDIDO ID
+=========================================================================*/
+router.get('/:id', validarJWTClient, getPedidoId);
+/** =====================================================================
+ *  GET PEDIDO ID
+=========================================================================*/
+
+/** =====================================================================
+ *  POST CREATE PEDIDO
 =========================================================================*/
 router.post('/', [
-        check('email', 'El email es olbigatorio').not().isEmpty(),
-        check('password', 'La contraseña es obligatoria').not().isEmpty(),
-        validarCampos
+        validarJWTClient
     ],
-    login
+    createPedido
 );
 /** =====================================================================
- *  LOGIN
+ *  POST CREATE PEDIDO
 =========================================================================*/
 
 /** =====================================================================
- *  RENEW TOKEN
+ *  PUT PEDIDO
 =========================================================================*/
-router.get('/renew', validarJWT, renewJWT);
+router.put('/:id', validarJWTClient, updatePedido);
 /** =====================================================================
-*  RENEW TOKEN
+ *  PUT PEDIDO
 =========================================================================*/
-/** =====================================================================
- *  LOGIN
-=========================================================================*/
-router.post('/user', [
-        check('email', 'El email es olbigatorio').not().isEmpty(),
-        check('password', 'La contraseña es obligatoria').not().isEmpty(),
-        validarCampos
-    ],
-    loginClient
-);
-/** =====================================================================
- *  LOGIN
-=========================================================================*/
-
-/** =====================================================================
- *  RENEW TOKEN
-=========================================================================*/
-router.get('/user/renew', validarJWTClient, renewJWTClient);
-/** =====================================================================
-*  RENEW TOKEN
-=========================================================================*/
-
 
 // EXPORT
 module.exports = router;

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/users.model');
 const Client = require('../models/clients.model');
 
-const { generarJWT } = require('../helpers/jwt');
+const { generarJWT, generarJWTClient } = require('../helpers/jwt');
 
 /** =====================================================================
  *  LOGIN
@@ -99,14 +99,14 @@ const renewJWT = async(req, res = response) => {
 =========================================================================*/
 const loginClient = async(req, res = response) => {
 
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = email.trim().toLowerCase();
 
     try {
 
         // VALIDATE USER
         const clientDB = await Client.findOne({ email });
         if (!clientDB) {
-
             return res.status(404).json({
                 ok: false,
                 msg: 'El email o la contraseña es incorrecta'
@@ -125,7 +125,7 @@ const loginClient = async(req, res = response) => {
         } else {
 
             if (clientDB.status) {
-                const token = await generarJWT(clientDB.id);
+                const token = await generarJWTClient(clientDB.id);
 
                 res.json({
                     ok: true,
@@ -165,11 +165,10 @@ const renewJWTClient = async(req, res = response) => {
     const cid = req.cid;
 
     // GENERAR TOKEN - JWT
-    const token = await generarJWT(uid);
+    const token = await generarJWTClient(cid);
 
     // SEARCH CLIENT
-    const usuario = await Client.findById(uid, 'email name role img address uid valid fecha status');
-    // SEARCH CLIENT
+    const usuario = await Client.findById(cid, 'name lastname cedula phone email address city department referralCode referredBy walletBalance status cid fecha'); // SEARCH CLIENT
 
     res.status(200).json({
         ok: true,
@@ -185,5 +184,7 @@ const renewJWTClient = async(req, res = response) => {
 
 module.exports = {
     login,
-    renewJWT
+    renewJWT,
+    loginClient,
+    renewJWTClient
 };

@@ -50,13 +50,13 @@ const validarJWTClient = (req, res = response, next) => {
 
         const { cid } = jwt.verify(token, process.env.SECRET_SEED_JWT);
 
-        req.uid = uid;
+        req.cid = cid;
         next();
 
     } catch (error) {
         return res.status(401).json({
             ok: false,
-            msg: 'Token invalido'
+            msg: 'Token invalido, debe de iniciar session'
         });
 
     }
