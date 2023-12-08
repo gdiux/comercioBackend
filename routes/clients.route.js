@@ -9,7 +9,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT, validarJWTClient } = require('../middlewares/validar-jwt');
 
 // CONTROLLER
-const { getClients, createClient, updateClient, deleteClient, createClientWeb } = require('../controllers/clients.controller');
+const { getClients, createClient, updateClient, deleteClient, createClientWeb, nivelesClient } = require('../controllers/clients.controller');
 
 const router = Router();
 
@@ -17,6 +17,14 @@ const router = Router();
  *  GET CLIENTS
 =========================================================================*/
 router.get('/', validarJWT, getClients);
+/** =====================================================================
+ *  GET CLIENTS
+=========================================================================*/
+
+/** =====================================================================
+ *  GET CLIENTS
+=========================================================================*/
+router.get('/level/:cid', validarJWT, nivelesClient);
 /** =====================================================================
  *  GET CLIENTS
 =========================================================================*/

@@ -8,20 +8,27 @@ const getPedido = async(req, res) => {
 
         const { desde, hasta, sort, ...query } = req.body;
 
-        const [pedidos, total] = await Promise.all([
+        const [pedidos, total, pendientes, enviandos, entregados] = await Promise.all([
             Pedido.find(query)
             .populate('client')
+            .populate('invoice')
             .populate('items.product')
             .sort(sort)
             .limit(hasta)
             .skip(desde),
-            Pedido.countDocuments(query)
+            Pedido.countDocuments(),
+            Pedido.countDocuments({ estado: 'Pendiente' }),
+            Pedido.countDocuments({ estado: 'Enviando' }),
+            Pedido.countDocuments({ estado: 'Entregado' })
         ]);
 
         res.json({
             ok: true,
             pedidos,
-            total
+            total,
+            pendientes,
+            enviandos,
+            entregados
         });
 
     } catch (error) {
@@ -42,6 +49,8 @@ const getPedidoId = async(req, res = response) => {
         const id = req.params.id;
 
         const pedidoDB = await Pedido.findById(id)
+            .populate('items.product')
+            .populate('invoice')
             .populate('client');
         if (!pedidoDB) {
             return res.status(400).json({
@@ -52,7 +61,7 @@ const getPedidoId = async(req, res = response) => {
 
         res.json({
             ok: true,
-            invoice: pedidoDB
+            pedido: pedidoDB
         });
 
 
@@ -111,11 +120,17 @@ const updatePedido = async(req, res = response) => {
         let {...campos } = req.body;
 
         // UPDATE
-        const pedidoUpdate = await Pedido.findByIdAndUpdate(peid, campos, { new: true, useFindAndModify: false });
+        await Pedido.findByIdAndUpdate(peid, campos, { new: true, useFindAndModify: false });
+
+        // PEDIDO
+        const pedido = await Pedido.findById(peid)
+            .populate('items.product')
+            .populate('invoice')
+            .populate('client');
 
         res.json({
             ok: true,
-            pedido: pedidoUpdate
+            pedido
         });
 
     } catch (error) {

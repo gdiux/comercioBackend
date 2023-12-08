@@ -1,6 +1,8 @@
 const { response } = require('express');
 
 const Invoice = require('../models/invoice.model');
+const { soldProduct } = require('../helpers/update-product');
+const { updateWalletReffer } = require('../helpers/update-wallet');
 
 /**
  * The function `getInvoice` is an asynchronous function that retrieves invoices based on a query and
@@ -114,6 +116,14 @@ const createInvoice = async(req, res = response) => {
         invoice.create = uid;
 
         await invoice.save();
+
+        // UPDATE PRODUCTS
+        await soldProduct(invoice.items);
+
+        // UPDATE WALLET REFFER
+        if (invoice.client) {
+            await updateWalletReffer(invoice.client, invoice.amount);
+        }
 
         res.json({
             ok: true,

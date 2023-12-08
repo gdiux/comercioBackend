@@ -36,6 +36,10 @@ const PedidosSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Clients'
     },
+    invoice: {
+        type: Schema.Types.ObjectId,
+        ref: 'Invoices'
+    },
     amount: {
         type: Number
     },

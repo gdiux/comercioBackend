@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const short = require('short-uuid');
 
 const Client = require('../models/clients.model');
+const { getReferidos } = require('../helpers/query-levels');
 
 /** =====================================================================
  *  GET CLIENTS
@@ -35,13 +36,104 @@ const getClients = async(req, res = response) => {
             ok: false,
             msg: 'Error inesperado, porfavor intente de nuevo'
         });
-
     }
 
 };
 /** =====================================================================
  *  GET CLIENTS
 =========================================================================*/
+
+/** =====================================================================
+ *  GET NIVELES CLIENTS
+=========================================================================*/
+const nivelesClient = async(req, res = response) => {
+
+    try {
+
+        const cid = req.params.cid;
+
+        let first = [];
+        let two = [];
+        let three = [];
+        let four = [];
+
+        // SEARCH CLIENT
+        const clientDB = await Client.findById(cid);
+        if (!clientDB) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No existe ningun usuario con este ID'
+            });
+        }
+
+        // LEVEL ONE
+        first = await getReferidos(clientDB.referralCode);
+        if (first.length > 0) {
+
+            // PUSH LEVEL TWO
+            for (const twoL of first) {
+                let refer = await getReferidos(twoL.referralCode);
+                if (refer.length > 0) {
+                    for (const item of refer) {
+                        two.push(item);
+                    }
+                }
+            }
+        }
+
+        if (two.length > 0) {
+            // PUSH LEVEL THREE
+            for (const threeL of two) {
+                let refer = await getReferidos(threeL.referralCode);
+                if (refer.length > 0) {
+                    for (const item of refer) {
+                        three.push(item);
+
+                    }
+                }
+            }
+        }
+
+        // LEVEL THREE
+        if (three.length > 0) {
+
+            // PUSH LEVEL FOUR
+            for (const fourL of three) {
+                let refer = await getReferidos(fourL.referralCode);
+                if (refer.length > 0) {
+                    for (const item of refer) {
+                        four.push(item);
+                    }
+                }
+            }
+        }
+
+
+        res.json({
+            ok: true,
+            first,
+            two,
+            three,
+            four,
+        });
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado, porfavor intente de nuevo'
+        });
+    }
+
+};
+
+
+/** =====================================================================
+ *  GET NIVELES CLIENTS
+=========================================================================*/
+
 /** =====================================================================
  *  CREATE CLIENT
 =========================================================================*/
@@ -270,5 +362,6 @@ module.exports = {
     createClient,
     createClientWeb,
     updateClient,
-    deleteClient
+    deleteClient,
+    nivelesClient
 };

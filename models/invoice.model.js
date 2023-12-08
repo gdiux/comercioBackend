@@ -1,4 +1,3 @@
-
 const { Schema, model, connection } = require('mongoose');
 
 const autoIncrement = require('mongoose-auto-increment');
@@ -39,7 +38,7 @@ const ItemsSchema = Schema({
 
 const InvoiceSchema = Schema({
 
-    
+
     invoice: {
         type: Number
     },
@@ -50,6 +49,10 @@ const InvoiceSchema = Schema({
     client: {
         type: Schema.Types.ObjectId,
         ref: 'Clients'
+    },
+    pedido: {
+        type: Schema.Types.ObjectId,
+        ref: 'Pedidos'
     },
     amount: {
         type: Number

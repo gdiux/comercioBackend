@@ -3,6 +3,7 @@ const { response } = require('express');
 const User = require('../models/users.model');
 const Client = require('../models/clients.model');
 const Product = require('../models/products.model');
+const Pedido = require('../models/pedidos.model');
 
 /** =====================================================================
  *  SEARCH FOR TABLE
@@ -80,6 +81,24 @@ const search = async(req, res = response) => {
                 .populate('categoria')
                 .populate('subcategoria'),
                 Product.countDocuments()
+            ]);
+            break;
+
+        case 'pedidos':
+
+            // data = await Client.find({ name: regex });
+            [data, total] = await Promise.all([
+                Pedido.find({
+                    $or: [
+                        { pedido: regex },
+                        { amount: regex },
+                        { estado: regex }
+                    ]
+                })
+                .skip(desde)
+                .limit(hasta)
+                .populate('client'),
+                Pedido.countDocuments()
             ]);
             break;
 
