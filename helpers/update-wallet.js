@@ -63,12 +63,11 @@ const updateWalletClient = async(cid, amount) => {
     try {
 
         const client = await Client.findById(cid);
-        if (!client.referredBy) {
+        if (!client) {
             return true;
         };
 
-        client.walletBalance = client.walletBalance - amount;
-
+        client.walletBalance -= amount;
         client.save();
 
         return true;

@@ -89,7 +89,7 @@ const createPedido = async(req, res = response) => {
 
         if (saldo || saldo > 0) {
             pedido.saldo = saldo;
-            updateWalletClient(cid, saldo);
+            await updateWalletClient(cid, saldo);
         }
 
         await pedido.save();
