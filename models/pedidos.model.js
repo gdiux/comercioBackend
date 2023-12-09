@@ -59,7 +59,9 @@ const PedidosSchema = Schema({
     nota: {
         type: String
     },
-
+    saldo: {
+        type: Number
+    },
 
 });
 
