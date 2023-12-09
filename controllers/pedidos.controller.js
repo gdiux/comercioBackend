@@ -1,6 +1,7 @@
 const { response } = require('express');
 
 const Pedido = require('../models/pedidos.model');
+const { updateWalletClient } = require('../helpers/update-wallet');
 
 const getPedido = async(req, res) => {
 
@@ -80,10 +81,16 @@ const createPedido = async(req, res = response) => {
     try {
 
         const cid = req.cid;
+        const { saldo, ...formaData } = req.body;
 
         // SAVE INVOICE
-        const pedido = new Pedido(req.body);
+        const pedido = new Pedido(formaData);
         pedido.client = cid;
+
+        if (saldo || saldo > 0) {
+            pedido.saldo = saldo;
+            updateWalletClient(cid, saldo);
+        }
 
         await pedido.save();
 

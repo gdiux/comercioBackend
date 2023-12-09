@@ -58,7 +58,34 @@ const updateWalletReffer = async(cid, amount) => {
 
 };
 
+const updateWalletClient = async(cid, amount) => {
+
+    try {
+
+        const client = await Client.findById(cid);
+        if (!client.referredBy) {
+            return true;
+        };
+
+        client.walletBalance = client.walletBalance - amount;
+
+        client.save();
+
+        return true;
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+}
+
+/** =====================================================================
+ *  UPDATE WALLET CLIENT
+=========================================================================*/
+
 // EXPORT
 module.exports = {
-    updateWalletReffer
+    updateWalletReffer,
+    updateWalletClient
 };
