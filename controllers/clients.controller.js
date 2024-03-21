@@ -182,6 +182,60 @@ const createClient = async(req, res = response) => {
 
         await client.save();
 
+        res.json({
+            ok: true,
+            client
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado, porfavor intente nuevamente'
+        });
+    }
+
+};
+/** =====================================================================
+ *  CREATE CLIENT
+=========================================================================*/
+
+/** =====================================================================
+ *  CREATE CLIENT WEB
+=========================================================================*/
+const createClientWeb = async(req, res = response) => {
+
+    let { email, password } = req.body;
+
+    email = email.trim().toLowerCase();
+
+    try {
+
+        // VALIDATE EMAIL
+        const validarEmail = await Client.findOne({ email });
+        if (validarEmail) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Ya existe un usuario con este email'
+            });
+        }
+
+        // SAVE CLIENT
+        const client = new Client(req.body);
+
+        // ENCRYPTAR PASSWORD
+        if (!password) {
+            password = short.generate();
+        }
+
+        const salt = bcrypt.genSaltSync();
+        client.password = bcrypt.hashSync(password, salt);
+
+        client.referralCode = short.generate();
+        client.email = email;
+
+        await client.save();
+
         // EMAIL DE BIENVENIDA ======================================================
 
         const msg = 'Gracias por registrarte en Comercio Llanero';
@@ -248,61 +302,7 @@ const createClient = async(req, res = response) => {
 
 };
 /** =====================================================================
- *  CREATE CLIENT
-=========================================================================*/
-
-/** =====================================================================
- *  CREATE CLIENT
-=========================================================================*/
-const createClientWeb = async(req, res = response) => {
-
-    let { email, password } = req.body;
-
-    email = email.trim().toLowerCase();
-
-    try {
-
-        // VALIDATE EMAIL
-        const validarEmail = await Client.findOne({ email });
-        if (validarEmail) {
-            return res.status(400).json({
-                ok: false,
-                msg: 'Ya existe un usuario con este email'
-            });
-        }
-
-        // SAVE CLIENT
-        const client = new Client(req.body);
-
-        // ENCRYPTAR PASSWORD
-        if (!password) {
-            password = short.generate();
-        }
-
-        const salt = bcrypt.genSaltSync();
-        client.password = bcrypt.hashSync(password, salt);
-
-        client.referralCode = short.generate();
-        client.email = email;
-
-        await client.save();
-
-        res.json({
-            ok: true,
-            client
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            ok: false,
-            msg: 'Error inesperado, porfavor intente nuevamente'
-        });
-    }
-
-};
-/** =====================================================================
- *  CREATE CLIENT
+ *  CREATE CLIENT WEB
 =========================================================================*/
 
 /** =====================================================================
