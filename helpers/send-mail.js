@@ -18,7 +18,7 @@ const sendMail = async(email, subject, html, msg) => {
             secure: true, // use TLS
             auth: {
                 user: "soporte@comerciollanero.com",
-                pass: "N80721272r*",
+                pass: "N80721272r",
             },
         });
 
