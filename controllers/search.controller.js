@@ -15,6 +15,7 @@ const search = async(req, res = response) => {
     const regex = new RegExp(busqueda, 'i');
     const desde = Number(req.query.desde) || 0;
     const hasta = Number(req.query.hasta) || 50;
+    const activo = req.query.activo || 'no';
 
     let data = [];
     let total;
@@ -68,20 +69,41 @@ const search = async(req, res = response) => {
         case 'products':
 
             // data = await Client.find({ name: regex });
-            [data, total] = await Promise.all([
-                Product.find({
-                    $or: [
-                        { sku: regex },
-                        { name: regex },
-                        { description: regex }
-                    ]
-                })
-                .skip(desde)
-                .limit(hasta)
-                .populate('categoria')
-                .populate('subcategoria'),
-                Product.countDocuments()
-            ]);
+            if (activo === 'si') {
+                [data, total] = await Promise.all([
+                    Product.find({
+                        inventory: { $gte: 1, $lt: 10000000 },
+                        $or: [
+                            { sku: regex },
+                            { name: regex },
+                            { description: regex }
+                        ]
+                    })
+                    .skip(desde)
+                    .limit(hasta)
+                    .populate('categoria')
+                    .populate('subcategoria'),
+                    Product.countDocuments()
+                ]);
+
+            } else {
+                [data, total] = await Promise.all([
+                    Product.find({
+                        $or: [
+                            { sku: regex },
+                            { name: regex },
+                            { description: regex }
+                        ]
+                    })
+                    .skip(desde)
+                    .limit(hasta)
+                    .populate('categoria')
+                    .populate('subcategoria'),
+                    Product.countDocuments()
+                ]);
+            }
+
+
             break;
 
         case 'pedidos':
