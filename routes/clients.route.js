@@ -74,13 +74,7 @@ router.put('/:id', [
 /** =====================================================================
  *  UPDATE CLIENT
 =========================================================================*/
-router.put('/web/:id', [
-        validarJWTClient,
-        check('name', 'El nombre es olbigatorio').not().isEmpty(),
-        validarCampos
-    ],
-    updateClient
-);
+router.put('/web/:id', validarJWTClient, updateClient);
 /** =====================================================================
 *  UPDATE CLIENT
 =========================================================================*/

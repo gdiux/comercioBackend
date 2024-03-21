@@ -336,6 +336,12 @@ const updateClient = async(req, res = response) => {
             }
         }
 
+        if (password) {
+            // ENCRYPTAR PASSWORD
+            const salt = bcrypt.genSaltSync();
+            campos.password = bcrypt.hashSync(password, salt);
+        }
+
         // UPDATE
         campos.cedula = cedula;
         const clientUpdate = await Client.findByIdAndUpdate(cid, campos, { new: true, useFindAndModify: false });
