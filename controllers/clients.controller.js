@@ -189,7 +189,7 @@ const createClient = async(req, res = response) => {
         const html = `<div style="box-sizing:border-box;margin:0;font-family: Montserrat,-apple-system,BlinkMacSystemFont;font-size:1rem;font-weight:400;line-height:1.5;text-align:left;background-color:#fff;color:#333">
                 <div class="adM">
                     <center>
-                        <img src="https://comerciollanero.com/assets/img/logo.webp" style="max-width: 250px;">
+                        <img src="https://comerciollanero.com/assets/img/logo.png" style="max-width: 250px;">
                     </center>
                 </div>
                 <div style="box-sizing:border-box;width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto;max-width:620px">
