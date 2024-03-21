@@ -5,6 +5,7 @@ const User = require('../models/users.model');
 const Client = require('../models/clients.model');
 
 const { generarJWT, generarJWTClient } = require('../helpers/jwt');
+const { sendMail } = require('../helpers/send-mail');
 
 /** =====================================================================
  *  REEBOOT PASSWORD
