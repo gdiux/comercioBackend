@@ -325,15 +325,20 @@ const updateClient = async(req, res = response) => {
         // SEARCH CLIENT
 
         // VALIDATE CEDULA
-        const { cedula, ...campos } = req.body;
-        if (clientDB.cedula !== cedula) {
-            const validarCedula = await Client.findOne({ cedula });
-            if (validarCedula) {
-                return res.status(400).json({
-                    ok: false,
-                    msg: 'Ya existe un usuario con este numero de cedula de ciudadania'
-                });
+        const { cedula, password, ...campos } = req.body;
+        if (cedula) {
+
+            if (clientDB.cedula !== cedula) {
+                const validarCedula = await Client.findOne({ cedula });
+                if (validarCedula) {
+                    return res.status(400).json({
+                        ok: false,
+                        msg: 'Ya existe un usuario con este numero de cedula de ciudadania'
+                    });
+                }
             }
+
+            campos.cedula = cedula;
         }
 
         if (password) {
@@ -343,7 +348,7 @@ const updateClient = async(req, res = response) => {
         }
 
         // UPDATE
-        campos.cedula = cedula;
+
         const clientUpdate = await Client.findByIdAndUpdate(cid, campos, { new: true, useFindAndModify: false });
 
         res.json({
