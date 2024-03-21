@@ -1,9 +1,5 @@
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const { google } = require('googleapis');
-const OAuth2 = google.auth.OAuth2;
-
-const accountTransport = require('../acount_transport.json');
 
 /** =====================================================================
  *  ENVIAR CORREOS
