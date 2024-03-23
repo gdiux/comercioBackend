@@ -35,7 +35,6 @@ const getLogProducts = async(req, res = response) => {
         });
     }
 
-
 }
 
 // EXPORTS
