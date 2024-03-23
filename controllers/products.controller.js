@@ -1,7 +1,8 @@
 const { response } = require('express');
 
 const Product = require('../models/products.model');
-const Subcategory = require('../models/subcategory.model')
+const Subcategory = require('../models/subcategory.model');
+const LogProduct = require('../models/log.products.model');
 
 /** =====================================================================
  *  GET PRODUCTS EXCEL
@@ -115,12 +116,12 @@ const oneProduct = async(req, res = response) => {
  *  GET PRODUTS FOR SKU
 =========================================================================*/
 const GetSkuProduct = async(req, res = response) => {
-    
+
     try {
 
         const sku = req.params.sku;
 
-        const product = await Product.findOne({sku})
+        const product = await Product.findOne({ sku })
             .populate('categoria')
             .populate('tax')
             .populate('subcategoria');
@@ -296,7 +297,9 @@ const updateProduct = async(req, res = response) => {
     try {
 
         // SEARCH PRODUCT
-        const productDB = await Product.findById({ _id: pid });
+        const productDB = await Product.findById({ _id: pid })
+            .populate('categoria')
+            .populate('subcategoria');
         if (!productDB) {
             return res.status(400).json({
                 ok: false,
@@ -306,7 +309,7 @@ const updateProduct = async(req, res = response) => {
         // SEARCH PRODUCT
 
         // VALIDATE SKU && NAME
-        const { sku, name, ...campos } = req.body;
+        const { sku, name, qty, movimiento, ...campos } = req.body;
 
         // SKU
         if (String(productDB.sku) !== String(sku)) {
@@ -333,8 +336,44 @@ const updateProduct = async(req, res = response) => {
             campos.name = name;
         }
 
+        if (qty || qty > 0) {
+
+            const data = {
+                sku: productDB.sku,
+                name: productDB.name,
+                type: movimiento,
+                befored: productDB.inventory + qty,
+                qty: qty,
+                stock: productDB.inventory,
+                cajero: user,
+                categoria: productDB.categoria.name || '',
+                subcategoria: productDB.subcategoria.name || ''
+            }
+
+            if (movimiento === 'Eliminados') {
+                campos.damaged = productDB.damaged + qty;
+                campos.inventory = productDB.inventory - qty;
+
+                data.description = 'Dañados o Perdidos';
+                data.befored = productDB.inventory;
+                data.stock = campos.inventory;
+
+            } else if (movimiento === 'Agregados') {
+                campos.bought = productDB.bought + qty;
+                campos.inventory = productDB.inventory + qty;
+
+                data.description = 'Compro';
+                data.befored = productDB.inventory;
+                data.stock = campos.inventory;
+            }
+
+            const log = new LogProduct(data);
+            await log.save();
+
+        }
+
         // UPDATE        
-        const productUpdate = await Product.findByIdAndUpdate(pid, campos, { new: true, useFindAndModify: false });
+        await Product.findByIdAndUpdate(pid, campos, { new: true, useFindAndModify: false });
 
         const product = await Product.findById(pid)
             .populate('categoria')

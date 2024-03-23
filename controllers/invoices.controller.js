@@ -118,7 +118,7 @@ const createInvoice = async(req, res = response) => {
         await invoice.save();
 
         // UPDATE PRODUCTS
-        await soldProduct(invoice.items);
+        await soldProduct(invoice);
 
         // UPDATE WALLET REFFER
         if (invoice.client) {

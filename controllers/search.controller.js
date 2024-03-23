@@ -4,6 +4,7 @@ const User = require('../models/users.model');
 const Client = require('../models/clients.model');
 const Product = require('../models/products.model');
 const Pedido = require('../models/pedidos.model');
+const LogProduct = require('../models/log.products.model');
 
 /** =====================================================================
  *  SEARCH FOR TABLE
@@ -121,6 +122,28 @@ const search = async(req, res = response) => {
                 .limit(hasta)
                 .populate('client'),
                 Pedido.countDocuments()
+            ]);
+            break;
+        case 'movimientos':
+
+
+
+            // data = await Client.find({ name: regex });
+            [data, total] = await Promise.all([
+                LogProduct.find({
+                    $or: [
+                        { sku: regex },
+                        { name: regex },
+                        { description: regex },
+                        { type: regex },
+                        { categoria: regex },
+                        { subcategoria: regex }
+                    ]
+                })
+                .populate('cajero', 'name')
+                .skip(desde)
+                .limit(hasta),
+                LogProduct.countDocuments()
             ]);
             break;
 
