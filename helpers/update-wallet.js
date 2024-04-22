@@ -1,4 +1,5 @@
 const Client = require('../models/clients.model');
+const Invoice = require('../models/invoice.model');
 
 /** =====================================================================
  *  UPDATE WALLET
@@ -14,6 +15,31 @@ const updateWalletReffer = async(cid, amount) => {
 
         // 1er Nivel
         const refferOne = await Client.findOne({ referralCode: client.referredBy });
+
+        //VALIDAR SI ESTA ACTO PARA RECIBIR LA COMISION
+        let calM = (1000 * 60 * 60 * 24 * 30);
+        let initial = `${new Date().getMonth()}/1/${new Date().getFullYear()}`;
+        let end = `${new Date().getMonth()}/31/${new Date().getFullYear()}`;
+        if (((new Date().getTime() - new Date(refferOne.fecha).getTime()) / calM) > 1) {
+            let invoices = await Invoice.find({
+                $and: [{ fecha: { $gte: new Date(initial), $lt: new Date(end) } }],
+                status: true,
+                client: refferOne._id
+            })
+
+            let amount = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amount += invoice.amount
+            }
+
+            if (amount < 100000) {
+                return;
+            }
+
+        }
+
         refferOne.walletBalance += parseFloat((amount * 0.04).toFixed(2));
         refferOne.save();
 
@@ -23,6 +49,28 @@ const updateWalletReffer = async(cid, amount) => {
 
         // 2do Nivel
         const refferTwo = await Client.findOne({ referralCode: refferOne.referredBy });
+
+        // VALIDAR SI RECIBE COMISION
+        if (((new Date().getTime() - new Date(refferTwo.fecha).getTime()) / calM) > 1) {
+            let invoices = await Invoice.find({
+                $and: [{ fecha: { $gte: new Date(initial), $lt: new Date(end) } }],
+                status: true,
+                client: refferTwo._id
+            })
+
+            let amount = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amount += invoice.amount
+            }
+
+            if (amount < 100000) {
+                return;
+            }
+
+        }
+
         refferTwo.walletBalance += parseFloat((amount * 0.03).toFixed(2));
         refferTwo.save();
 
@@ -32,6 +80,27 @@ const updateWalletReffer = async(cid, amount) => {
 
         // 3er Nivel
         const refferThree = await Client.findOne({ referralCode: refferTwo.referredBy });
+        // VALIDAR SI RECIBE COMISION
+        if (((new Date().getTime() - new Date(refferThree.fecha).getTime()) / calM) > 1) {
+            let invoices = await Invoice.find({
+                $and: [{ fecha: { $gte: new Date(initial), $lt: new Date(end) } }],
+                status: true,
+                client: refferThree._id
+            })
+
+            let amount = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amount += invoice.amount
+            }
+
+            if (amount < 100000) {
+                return;
+            }
+
+        }
+
         refferThree.walletBalance += parseFloat((amount * 0.02).toFixed(2));
         refferThree.save();
 
@@ -41,6 +110,28 @@ const updateWalletReffer = async(cid, amount) => {
 
         // 4to Nivel
         const refferfour = await Client.findOne({ referralCode: refferThree.referredBy });
+
+        // VALIDAR SI RECIBE COMISION
+        if (((new Date().getTime() - new Date(refferfour.fecha).getTime()) / calM) > 1) {
+            let invoices = await Invoice.find({
+                $and: [{ fecha: { $gte: new Date(initial), $lt: new Date(end) } }],
+                status: true,
+                client: refferfour._id
+            })
+
+            let amount = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amount += invoice.amount
+            }
+
+            if (amount < 100000) {
+                return;
+            }
+
+        }
+
         refferfour.walletBalance += parseFloat((amount * 0.01).toFixed(2));
         refferfour.save();
 
