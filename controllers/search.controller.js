@@ -126,8 +126,6 @@ const search = async(req, res = response) => {
             break;
         case 'movimientos':
 
-
-
             // data = await Client.find({ name: regex });
             [data, total] = await Promise.all([
                 LogProduct.find({
