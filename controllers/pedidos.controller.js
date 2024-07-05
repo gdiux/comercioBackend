@@ -150,11 +150,46 @@ const updatePedido = async(req, res = response) => {
 
 };
 
+const delPedido = async(req, res = response) => {
+
+    try {
+
+        const peid = req.params.id;
+
+        // SEARCH PEDIDO
+        const pedidoDB = await Pedido.findById(peid);
+        if (!pedidoDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe ningun pedido con este ID'
+            });
+        }
+        // SEARCH PEDIDO
+
+        await Pedido.findByIdAndDelete(peid);
+
+        res.json({
+            ok: true,
+            msg: 'El pedido se ha eliminado exitosamente!'
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error Inesperado'
+        });
+    }
+
+};
+
 
 // EXPORTS
 module.exports = {
     getPedido,
     getPedidoId,
     createPedido,
-    updatePedido
+    updatePedido,
+    delPedido
 };

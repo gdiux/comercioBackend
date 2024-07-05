@@ -9,7 +9,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWTClient } = require('../middlewares/validar-jwt');
 
 // CONTROLLERS
-const { getPedido, getPedidoId, createPedido, updatePedido } = require('../controllers/pedidos.controller');
+const { getPedido, getPedidoId, createPedido, updatePedido, delPedido } = require('../controllers/pedidos.controller');
 
 const router = Router();
 
@@ -45,9 +45,11 @@ router.post('/', [
  *  PUT PEDIDO
 =========================================================================*/
 router.put('/:id', validarJWTClient, updatePedido);
+
 /** =====================================================================
- *  PUT PEDIDO
+ *  DELETE PEDIDO
 =========================================================================*/
+router.delete('/:id', validarJWTClient, delPedido);
 
 // EXPORT
 module.exports = router;
