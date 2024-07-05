@@ -18,7 +18,7 @@ const getClients = async(req, res = response) => {
 
         const [clients, total] = await Promise.all([
 
-            Client.find()
+            Client.find({ status: true })
             .skip(desde)
             .limit(limit),
 
