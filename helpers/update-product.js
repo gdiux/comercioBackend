@@ -50,7 +50,37 @@ const soldProduct = async(invoice) => {
 
 };
 
+/** =====================================================================
+ *  RETURN STOCK 
+=========================================================================*/
+const returnProduct = async(invoice) => {
+
+    try {
+
+        const products = invoice.items;
+
+        for (const item of products) {
+
+            const product = await Product.findOne({ sku: item.sku });
+
+            product.inventory += item.quantity;
+            product.sold -= item.quantity;
+            product.save();
+
+        }
+
+        return true;
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+};
+
+
 // EXPORT
 module.exports = {
-    soldProduct
+    soldProduct,
+    returnProduct
 };

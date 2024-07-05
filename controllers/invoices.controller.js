@@ -1,7 +1,7 @@
 const { response } = require('express');
 
 const Invoice = require('../models/invoice.model');
-const { soldProduct } = require('../helpers/update-product');
+const { soldProduct, returnProduct } = require('../helpers/update-product');
 const { updateWalletReffer } = require('../helpers/update-wallet');
 
 /**
@@ -189,11 +189,51 @@ const updateInvoice = async(req, res = response) => {
 
 };
 
+const cancelInvoice = async(req, res = response) => {
+
+    const iid = req.params.id;
+
+    try {
+
+        // SEARCH INVOICE
+        const invoiceDB = await Invoice.findById(iid);
+        if (!invoiceDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No existe ninguna factura con este ID'
+            });
+        }
+        // SEARCH INVOICE
+
+        let {...campos } = req.body;
+
+        // UPDATE
+        const invoiceUpdate = await Invoice.findByIdAndUpdate(iid, campos, { new: true, useFindAndModify: false });
+
+        // RETORNAR ITEMS
+        await returnProduct(invoiceDB);
+
+        res.json({
+            ok: true,
+            invoice: invoiceUpdate
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error Inesperado'
+        });
+    }
+
+};
+
 
 // EXPORTS
 module.exports = {
     getInvoice,
     getInvoiceId,
     createInvoice,
-    updateInvoice
+    updateInvoice,
+    cancelInvoice
 };

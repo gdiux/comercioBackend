@@ -9,7 +9,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
 // CONTROLLERS
-const { getInvoice, getInvoiceId, createInvoice, updateInvoice } = require('../controllers/invoices.controller');
+const { getInvoice, getInvoiceId, createInvoice, updateInvoice, cancelInvoice } = require('../controllers/invoices.controller');
 
 const router = Router();
 
@@ -45,9 +45,11 @@ router.post('/', [
  *  PUT INVOICE
 =========================================================================*/
 router.put('/:id', validarJWT, updateInvoice);
+
 /** =====================================================================
- *  PUT INVOICE
+ *  CANCEL INVOICE
 =========================================================================*/
+router.put('/cancel/:id', validarJWT, cancelInvoice);
 
 // EXPORT
 module.exports = router;
