@@ -8,7 +8,7 @@ const getReferidos = async(referredBy) => {
     try {
 
         let referidos = [];
-        referidos = await Client.find({ referredBy });
+        referidos = await Client.find({ referredBy, status: true });
 
         if (referidos.length === 0) {
             referidos = [];

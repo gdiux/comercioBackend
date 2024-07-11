@@ -205,9 +205,10 @@ const createClient = async(req, res = response) => {
 =========================================================================*/
 const createClientWeb = async(req, res = response) => {
 
-    let { email, password } = req.body;
+    let { email, password, cedula } = req.body;
 
     email = email.trim().toLowerCase();
+    cedula = cedula.trim();
 
     try {
 
@@ -217,6 +218,15 @@ const createClientWeb = async(req, res = response) => {
             return res.status(400).json({
                 ok: false,
                 msg: 'Ya existe un usuario con este email'
+            });
+        }
+
+        // VALIDATE EMAIL
+        const validarCedula = await Client.findOne({ cedula });
+        if (validarCedula) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Ya existe un usuario con este numero de CC ó Nit'
             });
         }
 
@@ -233,6 +243,7 @@ const createClientWeb = async(req, res = response) => {
 
         client.referralCode = short.generate();
         client.email = email;
+        client.cedula = cedula;
 
         await client.save();
 
