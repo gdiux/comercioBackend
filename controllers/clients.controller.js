@@ -298,9 +298,12 @@ const createClientWeb = async(req, res = response) => {
 
         const send_mail = await sendMail(email, subject, html, msg);
 
+        const token = await generarJWT(cient._id);
+
         res.json({
             ok: true,
-            client
+            client,
+            token
         });
 
     } catch (error) {

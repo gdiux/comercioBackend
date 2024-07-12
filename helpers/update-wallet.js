@@ -40,7 +40,7 @@ const updateWalletReffer = async(cid, amount) => {
 
         }
 
-        refferOne.walletBalance += parseFloat((amount * 0.04).toFixed(2));
+        refferOne.walletBalance += parseFloat((amount * 0.02).toFixed(2));
         refferOne.save();
 
         if (!refferOne.referredBy) {
@@ -71,7 +71,7 @@ const updateWalletReffer = async(cid, amount) => {
 
         }
 
-        refferTwo.walletBalance += parseFloat((amount * 0.03).toFixed(2));
+        refferTwo.walletBalance += parseFloat((amount * 0.02).toFixed(2));
         refferTwo.save();
 
         if (!refferTwo.referredBy) {
@@ -132,7 +132,7 @@ const updateWalletReffer = async(cid, amount) => {
 
         }
 
-        refferfour.walletBalance += parseFloat((amount * 0.01).toFixed(2));
+        refferfour.walletBalance += parseFloat((amount * 0.03).toFixed(2));
         refferfour.save();
 
         if (!refferfour.referredBy) {
