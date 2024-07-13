@@ -5,6 +5,7 @@ const short = require('short-uuid');
 const Client = require('../models/clients.model');
 const { getReferidos } = require('../helpers/query-levels');
 const { sendMail } = require('../helpers/send-mail');
+const { generarJWTClient } = require('../helpers/jwt');
 
 /** =====================================================================
  *  GET CLIENTS
@@ -298,7 +299,7 @@ const createClientWeb = async(req, res = response) => {
 
         const send_mail = await sendMail(email, subject, html, msg);
 
-        const token = await generarJWT(cient._id);
+        const token = await generarJWTClient(client._id);
 
         res.json({
             ok: true,
