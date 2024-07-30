@@ -20,21 +20,41 @@ const updateWalletReffer = async(cid, amount) => {
         let calM = (1000 * 60 * 60 * 24 * 30);
         let initial = `${new Date().getMonth()}/1/${new Date().getFullYear()}`;
         let end = `${new Date().getMonth()}/31/${new Date().getFullYear()}`;
+
         if (((new Date().getTime() - new Date(refferOne.fecha).getTime()) / calM) > 1) {
+
             let invoices = await Invoice.find({
                 $and: [{ fecha: { $gte: new Date(initial), $lt: new Date(end) } }],
                 status: true,
                 client: refferOne._id
             })
 
-            let amount = 0;
+            let amountTemp = 0;
 
             for (let i = 0; i < invoices.length; i++) {
                 const invoice = invoices[i];
-                amount += invoice.amount
+                amountTemp += invoice.amount
             }
 
-            if (amount < 100000) {
+            if (amountTemp < 100000) {
+                return;
+            }
+
+        } else {
+
+            let invoices = await Invoice.find({
+                status: true,
+                client: refferOne._id
+            })
+
+            let amountTemp = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amountTemp += invoice.amount
+            }
+
+            if (amountTemp < 100000) {
                 return;
             }
 
@@ -69,6 +89,24 @@ const updateWalletReffer = async(cid, amount) => {
                 return;
             }
 
+        } else {
+
+            let invoices = await Invoice.find({
+                status: true,
+                client: refferOne._id
+            })
+
+            let amountTemp = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amountTemp += invoice.amount
+            }
+
+            if (amountTemp < 100000) {
+                return;
+            }
+
         }
 
         refferTwo.walletBalance += parseFloat((amount * 0.02).toFixed(2));
@@ -96,6 +134,24 @@ const updateWalletReffer = async(cid, amount) => {
             }
 
             if (amount < 100000) {
+                return;
+            }
+
+        } else {
+
+            let invoices = await Invoice.find({
+                status: true,
+                client: refferOne._id
+            })
+
+            let amountTemp = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amountTemp += invoice.amount
+            }
+
+            if (amountTemp < 100000) {
                 return;
             }
 
@@ -127,6 +183,24 @@ const updateWalletReffer = async(cid, amount) => {
             }
 
             if (amount < 100000) {
+                return;
+            }
+
+        } else {
+
+            let invoices = await Invoice.find({
+                status: true,
+                client: refferOne._id
+            })
+
+            let amountTemp = 0;
+
+            for (let i = 0; i < invoices.length; i++) {
+                const invoice = invoices[i];
+                amountTemp += invoice.amount
+            }
+
+            if (amountTemp < 100000) {
                 return;
             }
 
