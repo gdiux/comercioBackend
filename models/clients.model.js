@@ -1,5 +1,29 @@
 const { Schema, model } = require('mongoose');
 
+const ItemsSchema = Schema({
+    price: {
+        type: Number
+    },
+    qty: {
+        type: Number
+    },
+    product: {
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+    },
+});
+
+const CarritoSchema = Schema({
+
+    items: [ItemsSchema],
+
+    total: {
+        type: Number,
+        default: 0
+    }
+
+});
+
 const ClientSchema = Schema({
 
     name: {
@@ -64,6 +88,8 @@ const ClientSchema = Schema({
         type: Boolean,
         default: true
     },
+
+    carrito: CarritoSchema,
 
     fecha: {
         type: Date,

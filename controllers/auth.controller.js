@@ -177,7 +177,7 @@ const renewJWT = async(req, res = response) => {
     const token = await generarJWT(uid);
 
     // SEARCH USER
-    const usuario = await User.findById(uid, 'email name role img address uid valid fecha status');
+    const usuario = await User.findById(uid, 'email name role img address uid valid fecha status carrito');
     // SEARCH USER
 
     res.status(200).json({
@@ -202,7 +202,8 @@ const loginClient = async(req, res = response) => {
     try {
 
         // VALIDATE USER
-        const clientDB = await Client.findOne({ email });
+        const clientDB = await Client.findOne({ email })
+            .populate('carrito.items.product', 'name type description price cost wholesale inventory stock bought sold returned damaged min offert offertPrice offertPercent taxes tax categoria subcategoria visibility status date pid img');
         if (!clientDB) {
             return res.status(404).json({
                 ok: false,
@@ -224,9 +225,12 @@ const loginClient = async(req, res = response) => {
             if (clientDB.status) {
                 const token = await generarJWTClient(clientDB.id);
 
+                clientDB.password = '******'
+
                 res.json({
                     ok: true,
-                    token
+                    token,
+                    usuario: clientDB
                 });
             } else {
                 return res.status(401).json({
@@ -265,7 +269,8 @@ const renewJWTClient = async(req, res = response) => {
     const token = await generarJWTClient(cid);
 
     // SEARCH CLIENT
-    const usuario = await Client.findById(cid, 'name lastname cedula phone email address city department referralCode referredBy walletBalance status cid fecha'); // SEARCH CLIENT
+    const usuario = await Client.findById(cid, 'name lastname cedula phone email address city department referralCode referredBy walletBalance status cid fecha carrito')
+        .populate('carrito.items.product', 'name type description price cost wholesale inventory stock bought sold returned damaged min offert offertPrice offertPercent taxes tax categoria subcategoria visibility status date pid img');
 
     res.status(200).json({
         ok: true,

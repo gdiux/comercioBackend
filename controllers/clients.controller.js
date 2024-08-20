@@ -364,7 +364,9 @@ const updateClient = async(req, res = response) => {
 
         // UPDATE
 
-        const clientUpdate = await Client.findByIdAndUpdate(cid, campos, { new: true, useFindAndModify: false });
+        await Client.findByIdAndUpdate(cid, campos, { new: true, useFindAndModify: false });
+        const clientUpdate = await Client.findById(cid)
+            .populate('carrito.items.product', 'name type description price cost wholesale inventory stock bought sold returned damaged min offert offertPrice offertPercent taxes tax categoria subcategoria visibility status date pid img');
 
         res.json({
             ok: true,
