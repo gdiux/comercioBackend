@@ -41,9 +41,39 @@ const getClients = async(req, res = response) => {
     }
 
 };
+
 /** =====================================================================
- *  GET CLIENTS
+ *  GET CLIENT BY ID
 =========================================================================*/
+const getClientId = async(req, res = response) => {
+
+    try {
+        const cid = req.params.id;
+
+        const clientDB = await Client.findById(cid)
+            .populate('carrito.items.product');
+        if (!clientDB) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'No hemos encontrado este cliente, porfavor intente nuevamente.'
+            });
+        }
+
+        res.json({
+            ok: true,
+            client: clientDB
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado, porfavor intente nuevamente'
+        });
+    }
+
+};
 
 /** =====================================================================
  *  GET NIVELES CLIENTS
@@ -443,5 +473,6 @@ module.exports = {
     createClientWeb,
     updateClient,
     deleteClient,
-    nivelesClient
+    nivelesClient,
+    getClientId
 };
