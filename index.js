@@ -6,8 +6,11 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+const cron = require('node-cron');
+
 //Conection DB
 const { dbConection } = require('./database/config');
+const { validateClients } = require('./middlewares/validate-user');
 
 // Crear el servidor express
 const app = express();
@@ -48,4 +51,33 @@ app.get('*', (req, res) => {
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor Corriendo en el Puerto', process.env.PORT);
+});
+
+setTimeout(() => {
+    validateClients();
+}, 3000)
+
+
+// A las 5:30 AM
+cron.schedule('30 5 * * *', () => {
+    validateClients();
+});
+
+// A las 11:15 AM
+cron.schedule('15 11 * * *', () => {
+    validateClients();
+});
+
+// A las 3:45 PM
+cron.schedule('45 15 * * *', () => {
+    validateClients();
+});
+
+// A las 7:45 PM
+cron.schedule('25 19 * * *', () => {
+    validateClients();
+});
+// A las 1:45 AM
+cron.schedule('45 1 * * *', () => {
+    validateClients();
 });

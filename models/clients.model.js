@@ -89,6 +89,11 @@ const ClientSchema = Schema({
         default: true
     },
 
+    activo: {
+        type: Boolean,
+        default: false
+    },
+
     carrito: CarritoSchema,
 
     fecha: {

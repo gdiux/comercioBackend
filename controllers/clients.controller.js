@@ -2,11 +2,11 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const short = require('short-uuid');
 
-const Client = require('../models/clients.model');
 const { getReferidos } = require('../helpers/query-levels');
 const { sendMail } = require('../helpers/send-mail');
 const { generarJWTClient } = require('../helpers/jwt');
 
+const Client = require('../models/clients.model');
 /** =====================================================================
  *  GET CLIENTS
 =========================================================================*/
