@@ -53,11 +53,6 @@ app.listen(process.env.PORT, () => {
     console.log('Servidor Corriendo en el Puerto', process.env.PORT);
 });
 
-setTimeout(() => {
-    validateClients();
-}, 3000)
-
-
 // A las 5:30 AM
 cron.schedule('30 5 * * *', () => {
     validateClients();
@@ -73,8 +68,8 @@ cron.schedule('45 15 * * *', () => {
     validateClients();
 });
 
-// A las 7:45 PM
-cron.schedule('25 19 * * *', () => {
+// A las 7:30 PM
+cron.schedule('30 19 * * *', () => {
     validateClients();
 });
 // A las 1:45 AM
