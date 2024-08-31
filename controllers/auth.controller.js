@@ -269,7 +269,7 @@ const renewJWTClient = async(req, res = response) => {
     const token = await generarJWTClient(cid);
 
     // SEARCH CLIENT
-    const usuario = await Client.findById(cid, 'name lastname cedula phone email address city department referralCode referredBy walletBalance status cid fecha carrito activo')
+    const usuario = await Client.findById(cid, 'name lastname cedula phone email address city department referralCode referredBy walletBalance status cid fecha carrito activo codearea')
         .populate('carrito.items.product', 'name type description price cost wholesale inventory stock bought sold returned damaged min offert offertPrice offertPercent taxes tax categoria subcategoria visibility status date pid img');
 
     res.status(200).json({
