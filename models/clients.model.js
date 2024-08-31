@@ -40,6 +40,11 @@ const ClientSchema = Schema({
         unique: true
     },
 
+    codearea: {
+        type: String,
+        default: '+57'
+    },
+
     phone: {
         type: String
     },
